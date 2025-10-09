@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio de Sesión</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .contenedor {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      width: 280px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #mensaje {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="usuario" placeholder="Nombre de usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button id="btnIniciar">Iniciar Sesión</button>
+    <p id="mensaje"></p>
+  </div>
+
+  <!-- SDKs de Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <script>
+    // Configura tu proyecto Firebase 🔥
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_PROYECTO.firebaseapp.com",
+      databaseURL: "https://TU_PROYECTO-default-rtdb.firebaseio.com",
+      projectId: "TU_PROYECTO",
+      storageBucket: "TU_PROYECTO.appspot.com",
+      messagingSenderId: "000000000000",
+      appId: "1:000000000000:web:xxxxxxxxxxxxxxxxxx"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Evento de inicio de sesión
+    document.getElementById("btnIniciar").addEventListener("click", () => {
+      const usuario = document.getElementById("usuario").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const mensaje = document.getElementById("mensaje");
+
+      if (usuario === "" || password === "") {
+        mensaje.textContent = "⚠️ Ingresa usuario y contraseña.";
+        mensaje.style.color = "red";
+        return;
+      }
+
+      // Guardar datos en Firebase
+      const ref = db.ref("usuarios").push();
+      ref.set({
+        nombre: usuario,
+        password: password,
+        fecha: new Date().toLocaleString()
+      })
+      .then(() => {
+        mensaje.textContent = "✅ Iniciaste sesión con éxito.";
+        mensaje.style.color = "green";
+      })
+      .catch((error) => {
+        mensaje.textContent = "❌ Error: " + error.message;
+        mensaje.style.color = "red";
+      });
+    });
+  </script>
+
+</body>
+</html>
