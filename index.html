@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio de Sesión</title>
+  <title>Registro de Usuario</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f2f2f2;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
@@ -32,7 +31,7 @@
     button {
       width: 100%;
       padding: 10px;
-      background: #007bff;
+      background: #28a745;
       border: none;
       color: white;
       font-size: 16px;
@@ -40,7 +39,7 @@
       cursor: pointer;
     }
     button:hover {
-      background: #0056b3;
+      background: #218838;
     }
     #mensaje {
       margin-top: 10px;
@@ -51,10 +50,10 @@
 <body>
 
   <div class="contenedor">
-    <h2>Iniciar Sesión</h2>
+    <h2>Registrar Usuario</h2>
     <input type="text" id="usuario" placeholder="Nombre de usuario" />
     <input type="password" id="password" placeholder="Contraseña" />
-    <button id="btnIniciar">Iniciar Sesión</button>
+    <button id="btnRegistrar">Registrarse</button>
     <p id="mensaje"></p>
   </div>
 
@@ -63,7 +62,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <script>
-    // Configura tu proyecto Firebase 🔥
+    // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "TU_API_KEY",
       authDomain: "TU_PROYECTO.firebaseapp.com",
@@ -77,8 +76,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Evento de inicio de sesión
-    document.getElementById("btnIniciar").addEventListener("click", () => {
+    document.getElementById("btnRegistrar").addEventListener("click", () => {
       const usuario = document.getElementById("usuario").value.trim();
       const password = document.getElementById("password").value.trim();
       const mensaje = document.getElementById("mensaje");
@@ -89,7 +87,6 @@
         return;
       }
 
-      // Guardar datos en Firebase
       const ref = db.ref("usuarios").push();
       ref.set({
         nombre: usuario,
@@ -97,8 +94,11 @@
         fecha: new Date().toLocaleString()
       })
       .then(() => {
-        mensaje.textContent = "✅ Iniciaste sesión con éxito.";
+        mensaje.textContent = "✅ Registrado con éxito. Redirigiendo...";
         mensaje.style.color = "green";
+        setTimeout(() => {
+          window.location.href = "login.html"; // redirige a iniciar sesión
+        }, 2000);
       })
       .catch((error) => {
         mensaje.textContent = "❌ Error: " + error.message;
@@ -106,6 +106,5 @@
       });
     });
   </script>
-
 </body>
 </html>
