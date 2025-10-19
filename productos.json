@@ -1,0 +1,65 @@
+[
+  {
+    "id": "p001",
+    "nombre": "Camisa Casual Hombre",
+    "descripcion": "Camisa de algodón 100% con estilo moderno y cómodo.",
+    "precio": 79.90,
+    "imagen": "assets/productos/camisa_hombre.jpg",
+    "categoria": "Ropa",
+    "stock": 20
+  },
+  {
+    "id": "p002",
+    "nombre": "Vestido Floral Mujer",
+    "descripcion": "Vestido fresco y ligero con estampado floral ideal para verano.",
+    "precio": 95.50,
+    "imagen": "assets/productos/vestido_floral.jpg",
+    "categoria": "Ropa",
+    "stock": 15
+  },
+  {
+    "id": "p003",
+    "nombre": "Zapatillas Urbanas",
+    "descripcion": "Zapatillas unisex cómodas y resistentes, perfectas para uso diario.",
+    "precio": 120.00,
+    "imagen": "assets/productos/zapatillas_urbanas.jpg",
+    "categoria": "Calzado",
+    "stock": 25
+  },
+  {
+    "id": "p004",
+    "nombre": "Bolso de Cuero",
+    "descripcion": "Bolso elegante de cuero sintético, ideal para uso casual o formal.",
+    "precio": 110.00,
+    "imagen": "assets/productos/bolso_cuero.jpg",
+    "categoria": "Accesorios",
+    "stock": 10
+  },
+  {
+    "id": "p005",
+    "nombre": "Reloj Deportivo Digital",
+    "descripcion": "Reloj digital resistente al agua con cronómetro y alarma.",
+    "precio": 89.90,
+    "imagen": "assets/productos/reloj_deportivo.jpg",
+    "categoria": "Accesorios",
+    "stock": 30
+  },
+  {
+    "id": "p006",
+    "nombre": "Perfume Clásico Unisex",
+    "descripcion": "Fragancia elegante y duradera con notas frescas y amaderadas.",
+    "precio": 140.00,
+    "imagen": "assets/productos/perfume_clasico.jpg",
+    "categoria": "Cosméticos",
+    "stock": 12
+  },
+  {
+    "id": "p007",
+    "nombre": "Pulsera Roja de Promesa",
+    "descripcion": "Pulsera artesanal con hilo rojo, símbolo de conexión y protección.",
+    "precio": 25.00,
+    "imagen": "assets/productos/pulsera_roja.jpg",
+    "categoria": "Accesorios",
+    "stock": 40
+  }
+]
