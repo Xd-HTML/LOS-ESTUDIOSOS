@@ -9,13 +9,12 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebas
 
 // Configuración de tu proyecto Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDwird5A7fTnSD3JA7HgHNJhVOi3yiPVwU",
-  authDomain: "stylish-steps.firebaseapp.com",
-  projectId: "stylish-steps",
-  storageBucket: "stylish-steps.firebasestorage.app",
-  messagingSenderId: "580730135694",
-  appId: "1:580730135694:web:3d77bfef3af246f9c755df",
-  measurementId: "G-21F9WH2PZT"
+  apiKey: "AIzaSyDNeN0AIcXw0aAiwc6S7472y7YMjHzbV94",
+  authDomain: "tienda-virtual-883ef.firebaseapp.com",
+  projectId: "tienda-virtual-883ef",
+  storageBucket: "tienda-virtual-883ef.firebasestorage.app",
+  messagingSenderId: "871120614985",
+  appId: "1:871120614985:web:0274d91497b7f1e3d33198"
 };
 // =======================================================
 // 🚀 INICIALIZAR FIREBASE
