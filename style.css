@@ -38,7 +38,7 @@ header {
 }
 
 .logo h1 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   color: #0077ff;
 }
 
@@ -48,7 +48,8 @@ header {
   gap: 5px;
   background-color: #f0f0f0;
   border-radius: 25px;
-  padding: 5px 10px;
+  padding: 6px 12px;
+  transition: 0.3s ease;
 }
 
 .search-bar input {
@@ -64,6 +65,11 @@ header {
   background: none;
   border: none;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.search-bar button:hover {
+  transform: scale(1.1);
 }
 
 .search-bar img {
@@ -81,6 +87,11 @@ header {
   background: none;
   border: none;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.cart-user button:hover {
+  transform: scale(1.1);
 }
 
 .cart-user img {
@@ -192,20 +203,114 @@ footer {
   margin-top: 50px;
 }
 
-.user-profile {
+footer a {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* ===== PERFIL DE USUARIO ===== */
+.modal {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  background: #f8f8f8;
-  padding: 10px 15px;
-  border-radius: 10px;
-  margin: 15px auto;
-  width: fit-content;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  transition: 0.3s ease;
 }
 
-.user-profile img.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+.modal.hidden {
+  display: none;
 }
 
+.modal-content {
+  background-color: white;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 320px;
+  max-width: 90%;
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content h3 {
+  color: #0077ff;
+  margin-bottom: 15px;
+}
+
+.modal-content p {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 1.4rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #0077ff;
+}
+
+.logout-btn {
+  background-color: #ff4747;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #d93636;
+}
+
+/* ===== BOTÓN DE IMPORTAR ===== */
+#importBtn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #0077ff;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#importBtn:hover {
+  background-color: #005dd1;
+  transform: translateY(-3px);
+}
+
+.hidden {
+  display: none;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
