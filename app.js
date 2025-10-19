@@ -1,76 +1,152 @@
 // app.js
 import { db } from "./firebase-config.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-const productList = document.getElementById("productList");
-const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
+// =====================
+// 🔹 CLASE PRODUCTO
+// =====================
+class Producto {
+  constructor(nombre, descripcion, precio, imagen) {
+    this.nombre = nombre;
+    this.descripcion = descripcion;
+    this.precio = precio;
+    this.imagen = imagen;
+  }
 
-// === FUNCIÓN: Cargar productos desde Firestore ===
-async function cargarProductos() {
-  productList.innerHTML = "<p>Cargando productos...</p>";
-
-  try {
-    const querySnapshot = await getDocs(collection(db, "productos"));
-    productList.innerHTML = ""; // Limpia antes de agregar
-
-    querySnapshot.forEach((doc) => {
-      const producto = doc.data();
-      mostrarProducto(producto);
-    });
-  } catch (error) {
-    console.error("Error al cargar productos:", error);
-    productList.innerHTML = "<p>Error al cargar los productos.</p>";
+  // Método para crear la tarjeta del producto
+  crearCard() {
+    const card = document.createElement("div");
+    card.classList.add("product-card");
+    card.innerHTML = `
+      <img src="${this.imagen}" alt="${this.nombre}" />
+      <div class="product-info">
+        <h3>${this.nombre}</h3>
+        <p>${this.descripcion}</p>
+        <p class="price">S/ ${this.precio}</p>
+      </div>
+    `;
+    return card;
   }
 }
 
-// === FUNCIÓN: Mostrar producto en pantalla ===
-function mostrarProducto(producto) {
-  const card = document.createElement("div");
-  card.classList.add("product-card");
-  card.innerHTML = `
-    <img src="${producto.imagen}" alt="${producto.nombre}" />
-    <div class="product-info">
-      <h3>${producto.nombre}</h3>
-      <p>${producto.descripcion}</p>
-      <p class="price">S/ ${producto.precio}</p>
-    </div>
-  `;
-  productList.appendChild(card);
-}
-
-// === FUNCIÓN: Buscar productos ===
-searchBtn.addEventListener("click", async () => {
-  const termino = searchInput.value.toLowerCase();
-  if (termino.trim() === "") {
-    cargarProductos();
-    return;
+// =====================
+// 🔹 CLASE USUARIO
+// =====================
+class Usuario {
+  constructor(nombre, correo, avatar) {
+    this.nombre = nombre;
+    this.correo = correo;
+    this.avatar = avatar;
   }
 
-  productList.innerHTML = "<p>Buscando...</p>";
+  mostrarPerfil() {
+    const perfilDiv = document.getElementById("userProfile");
+    perfilDiv.innerHTML = `
+      <img src="${this.avatar}" alt="Avatar del usuario" class="avatar" />
+      <div>
+        <h3>${this.nombre}</h3>
+        <p>${this.correo}</p>
+      </div>
+    `;
+  }
+}
 
-  try {
-    const querySnapshot = await getDocs(collection(db, "productos"));
-    const resultados = [];
+// =====================
+// 🔹 CLASE APLICACIÓN PRINCIPAL
+// =====================
+class TiendaVirtual {
+  constructor() {
+    this.productList = document.getElementById("productList");
+    this.searchInput = document.getElementById("searchInput");
+    this.searchBtn = document.getElementById("searchBtn");
+    this.initEventos();
+  }
 
-    querySnapshot.forEach((doc) => {
-      const producto = doc.data();
-      if (producto.nombre.toLowerCase().includes(termino)) {
-        resultados.push(producto);
-      }
-    });
+  // Cargar todos los productos
+  async cargarProductos() {
+    this.productList.innerHTML = "<p>Cargando productos...</p>";
 
-    productList.innerHTML = "";
+    try {
+      const querySnapshot = await getDocs(collection(db, "productos"));
+      this.productList.innerHTML = "";
 
-    if (resultados.length > 0) {
-      resultados.forEach((p) => mostrarProducto(p));
-    } else {
-      productList.innerHTML = "<p>No se encontraron productos.</p>";
+      querySnapshot.forEach((docSnap) => {
+        const p = docSnap.data();
+        const producto = new Producto(p.nombre, p.descripcion, p.precio, p.imagen);
+        this.productList.appendChild(producto.crearCard());
+      });
+    } catch (error) {
+      console.error("❌ Error al cargar productos:", error);
+      this.productList.innerHTML = "<p>Error al cargar los productos.</p>";
     }
-  } catch (error) {
-    console.error("Error en búsqueda:", error);
   }
-});
 
-// === Iniciar ===
-window.addEventListener("DOMContentLoaded", cargarProductos);
+  // Buscar productos
+  async buscarProductos() {
+    const termino = this.searchInput.value.toLowerCase().trim();
+    if (termino === "") {
+      this.cargarProductos();
+      return;
+    }
+
+    this.productList.innerHTML = "<p>Buscando...</p>";
+
+    try {
+      const querySnapshot = await getDocs(collection(db, "productos"));
+      this.productList.innerHTML = "";
+      let encontrados = 0;
+
+      querySnapshot.forEach((docSnap) => {
+        const p = docSnap.data();
+        if (p.nombre.toLowerCase().includes(termino)) {
+          const producto = new Producto(p.nombre, p.descripcion, p.precio, p.imagen);
+          this.productList.appendChild(producto.crearCard());
+          encontrados++;
+        }
+      });
+
+      if (encontrados === 0) {
+        this.productList.innerHTML = "<p>No se encontraron productos.</p>";
+      }
+    } catch (error) {
+      console.error("❌ Error en búsqueda:", error);
+    }
+  }
+
+  // Mostrar perfil de usuario (desde Firestore)
+  async cargarUsuario(uid = "usuario_demo") {
+    try {
+      const userRef = doc(db, "usuarios", uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const u = userSnap.data();
+        const usuario = new Usuario(u.nombre, u.correo, u.avatar);
+        usuario.mostrarPerfil();
+      } else {
+        console.log("⚠️ No se encontró el usuario.");
+      }
+    } catch (error) {
+      console.error("❌ Error al cargar usuario:", error);
+    }
+  }
+
+  // Eventos
+  initEventos() {
+    this.searchBtn.addEventListener("click", () => this.buscarProductos());
+  }
+}
+
+// =====================
+// 🚀 INICIALIZAR APP
+// =====================
+window.addEventListener("DOMContentLoaded", async () => {
+  const app = new TiendaVirtual();
+  await app.cargarUsuario(); // Cargar el perfil del usuario
+  await app.cargarProductos(); // Cargar los productos
+});
