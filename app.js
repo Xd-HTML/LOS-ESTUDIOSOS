@@ -18,16 +18,16 @@ class Producto {
     this.imagen = imagen;
   }
 
-  // Método para crear la tarjeta del producto
   crearCard() {
     const card = document.createElement("div");
     card.classList.add("product-card");
     card.innerHTML = `
-      <img src="${this.imagen}" alt="${this.nombre}" />
+      <img src="${this.imagen}" alt="${this.nombre}" loading="lazy" />
       <div class="product-info">
         <h3>${this.nombre}</h3>
         <p>${this.descripcion}</p>
-        <p class="price">S/ ${this.precio}</p>
+        <p class="price">S/ ${this.precio.toFixed(2)}</p>
+        <button class="buy-btn">🛒 Agregar al carrito</button>
       </div>
     `;
     return card;
@@ -47,8 +47,8 @@ class Usuario {
   mostrarPerfil() {
     const perfilDiv = document.getElementById("userProfile");
     perfilDiv.innerHTML = `
-      <img src="${this.avatar}" alt="Avatar del usuario" class="avatar" />
-      <div>
+      <img src="${this.avatar}" alt="Avatar" class="avatar" />
+      <div class="user-text">
         <h3>${this.nombre}</h3>
         <p>${this.correo}</p>
       </div>
@@ -64,16 +64,22 @@ class TiendaVirtual {
     this.productList = document.getElementById("productList");
     this.searchInput = document.getElementById("searchInput");
     this.searchBtn = document.getElementById("searchBtn");
+
     this.initEventos();
   }
 
-  // Cargar todos los productos
+  // Cargar todos los productos desde Firestore
   async cargarProductos() {
-    this.productList.innerHTML = "<p>Cargando productos...</p>";
+    this.productList.innerHTML = `<div class="loading">⏳ Cargando productos...</div>`;
 
     try {
       const querySnapshot = await getDocs(collection(db, "productos"));
       this.productList.innerHTML = "";
+
+      if (querySnapshot.empty) {
+        this.productList.innerHTML = "<p>No hay productos disponibles.</p>";
+        return;
+      }
 
       querySnapshot.forEach((docSnap) => {
         const p = docSnap.data();
@@ -82,7 +88,7 @@ class TiendaVirtual {
       });
     } catch (error) {
       console.error("❌ Error al cargar productos:", error);
-      this.productList.innerHTML = "<p>Error al cargar los productos.</p>";
+      this.productList.innerHTML = "<p>Error al cargar los productos. Intenta más tarde.</p>";
     }
   }
 
@@ -94,7 +100,7 @@ class TiendaVirtual {
       return;
     }
 
-    this.productList.innerHTML = "<p>Buscando...</p>";
+    this.productList.innerHTML = `<div class="loading">🔎 Buscando productos...</div>`;
 
     try {
       const querySnapshot = await getDocs(collection(db, "productos"));
@@ -103,7 +109,7 @@ class TiendaVirtual {
 
       querySnapshot.forEach((docSnap) => {
         const p = docSnap.data();
-        if (p.nombre.toLowerCase().includes(termino)) {
+        if (p.nombre.toLowerCase().includes(termino) || p.descripcion.toLowerCase().includes(termino)) {
           const producto = new Producto(p.nombre, p.descripcion, p.precio, p.imagen);
           this.productList.appendChild(producto.crearCard());
           encontrados++;
@@ -111,14 +117,14 @@ class TiendaVirtual {
       });
 
       if (encontrados === 0) {
-        this.productList.innerHTML = "<p>No se encontraron productos.</p>";
+        this.productList.innerHTML = "<p>No se encontraron productos con ese nombre.</p>";
       }
     } catch (error) {
       console.error("❌ Error en búsqueda:", error);
     }
   }
 
-  // Mostrar perfil de usuario (desde Firestore)
+  // Cargar usuario (perfil desde Firestore)
   async cargarUsuario(uid = "usuario_demo") {
     try {
       const userRef = doc(db, "usuarios", uid);
@@ -129,16 +135,22 @@ class TiendaVirtual {
         const usuario = new Usuario(u.nombre, u.correo, u.avatar);
         usuario.mostrarPerfil();
       } else {
-        console.log("⚠️ No se encontró el usuario.");
+        console.warn("⚠️ No se encontró el usuario en la base de datos.");
+        document.getElementById("userProfile").innerHTML = `
+          <div class="guest">👤 Invitado</div>
+        `;
       }
     } catch (error) {
       console.error("❌ Error al cargar usuario:", error);
     }
   }
 
-  // Eventos
+  // Inicializar eventos
   initEventos() {
     this.searchBtn.addEventListener("click", () => this.buscarProductos());
+    this.searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") this.buscarProductos();
+    });
   }
 }
 
@@ -147,6 +159,6 @@ class TiendaVirtual {
 // =====================
 window.addEventListener("DOMContentLoaded", async () => {
   const app = new TiendaVirtual();
-  await app.cargarUsuario(); // Cargar el perfil del usuario
-  await app.cargarProductos(); // Cargar los productos
+  await app.cargarUsuario();
+  await app.cargarProductos();
 });
