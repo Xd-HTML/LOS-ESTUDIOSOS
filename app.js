@@ -1,21 +1,76 @@
-// firebase-config.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+// app.js
+import { db } from "./firebase-config.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-// 🔧 CONFIGURACIÓN DE TU PROYECTO FIREBASE
-// (Copia estos valores desde tu consola de Firebase > Configuración del proyecto > SDK web)
-const firebaseConfig = {
-  apiKey: "AIzaSyDwird5A7fTnSD3JA7HgHNJhVOi3yiPVwU",
-  authDomain: "stylish-steps.firebaseapp.com",
-  projectId: "stylish-steps",
-  storageBucket: "stylish-steps.firebasestorage.app",
-  messagingSenderId: "580730135694",
-  appId: "1:580730135694:web:3d77bfef3af246f9c755df",
-  measurementId: "G-21F9WH2PZT"
-};
+const productList = document.getElementById("productList");
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
 
-// 🚀 Inicializa Firebase
-const app = initializeApp(firebaseConfig);
+// === FUNCIÓN: Cargar productos desde Firestore ===
+async function cargarProductos() {
+  productList.innerHTML = "<p>Cargando productos...</p>";
 
-// 📦 Inicializa Firestore
-export const db = getFirestore(app);
+  try {
+    const querySnapshot = await getDocs(collection(db, "productos"));
+    productList.innerHTML = ""; // Limpia antes de agregar
+
+    querySnapshot.forEach((doc) => {
+      const producto = doc.data();
+      mostrarProducto(producto);
+    });
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
+    productList.innerHTML = "<p>Error al cargar los productos.</p>";
+  }
+}
+
+// === FUNCIÓN: Mostrar producto en pantalla ===
+function mostrarProducto(producto) {
+  const card = document.createElement("div");
+  card.classList.add("product-card");
+  card.innerHTML = `
+    <img src="${producto.imagen}" alt="${producto.nombre}" />
+    <div class="product-info">
+      <h3>${producto.nombre}</h3>
+      <p>${producto.descripcion}</p>
+      <p class="price">S/ ${producto.precio}</p>
+    </div>
+  `;
+  productList.appendChild(card);
+}
+
+// === FUNCIÓN: Buscar productos ===
+searchBtn.addEventListener("click", async () => {
+  const termino = searchInput.value.toLowerCase();
+  if (termino.trim() === "") {
+    cargarProductos();
+    return;
+  }
+
+  productList.innerHTML = "<p>Buscando...</p>";
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "productos"));
+    const resultados = [];
+
+    querySnapshot.forEach((doc) => {
+      const producto = doc.data();
+      if (producto.nombre.toLowerCase().includes(termino)) {
+        resultados.push(producto);
+      }
+    });
+
+    productList.innerHTML = "";
+
+    if (resultados.length > 0) {
+      resultados.forEach((p) => mostrarProducto(p));
+    } else {
+      productList.innerHTML = "<p>No se encontraron productos.</p>";
+    }
+  } catch (error) {
+    console.error("Error en búsqueda:", error);
+  }
+});
+
+// === Iniciar ===
+window.addEventListener("DOMContentLoaded", cargarProductos);
