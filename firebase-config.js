@@ -1,11 +1,13 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// =======================================================
+// 🔥 CONFIGURACIÓN DE FIREBASE PARA TIENDA VIRTUAL
+// =======================================================
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Importar las funciones necesarias del SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+
+// Configuración de tu proyecto Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDwird5A7fTnSD3JA7HgHNJhVOi3yiPVwU",
   authDomain: "stylish-steps.firebaseapp.com",
@@ -16,13 +18,13 @@ const firebaseConfig = {
   measurementId: "G-21F9WH2PZT"
 };
 
-// Initialize Firebase
+// =======================================================
+// 🚀 INICIALIZAR FIREBASE
+// =======================================================
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+getAnalytics(app); // opcional: solo si usas Google Analytics
 
-
-// 🚀 Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-
-// 📦 Inicializa Firestore
+// =======================================================
+// 📦 EXPORTAR INSTANCIA DE FIRESTORE
+// =======================================================
 export const db = getFirestore(app);
