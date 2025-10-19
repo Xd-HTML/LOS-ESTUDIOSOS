@@ -8,6 +8,7 @@
   <link rel="icon" href="assets/logo.png" type="image/png" />
 </head>
 <body>
+  <!-- === HEADER === -->
   <header>
     <div class="logo">
       <img src="assets/logo.png" alt="Logo Tienda" />
@@ -16,22 +17,25 @@
 
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Buscar productos..." />
-      <button id="searchBtn">
+      <button id="searchBtn" title="Buscar">
         <img src="assets/icons/search.png" alt="Buscar" />
       </button>
     </div>
 
     <div class="cart-user">
       <section id="userProfile" class="user-profile"></section>
-      <button id="cartBtn">
+
+      <button id="cartBtn" title="Ver carrito">
         <img src="assets/icons/carrito.png" alt="Carrito" />
       </button>
-      <button id="userBtn">
+
+      <button id="userBtn" title="Ver perfil">
         <img src="assets/icons/user.png" alt="Usuario" />
       </button>
     </div>
   </header>
 
+  <!-- === BANNER === -->
   <section class="banner">
     <img src="assets/banner.jpg" alt="Banner de la tienda" />
     <div class="banner-text">
@@ -40,19 +44,42 @@
     </div>
   </section>
 
+  <!-- === CONTENIDO PRINCIPAL === -->
   <main>
     <h2 class="section-title">Productos destacados</h2>
     <div class="products" id="productList">
-      <!-- Los productos se mostrarán aquí dinámicamente -->
+      <p>Cargando productos...</p>
     </div>
   </main>
 
+  <!-- === MODAL PERFIL DE USUARIO === -->
+  <div id="userModal" class="modal hidden">
+    <div class="modal-content">
+      <span id="closeUserModal" class="close-btn">&times;</span>
+      <h3>Perfil de Usuario</h3>
+      <div id="userData">
+        <p><strong>Nombre:</strong> <span id="userName">Invitado</span></p>
+        <p><strong>Email:</strong> <span id="userEmail">-</span></p>
+      </div>
+      <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <!-- === FOOTER === -->
   <footer>
     <p>© 2025 Tienda Virtual. Todos los derechos reservados.</p>
+    <p>
+      Desarrollado por
+      <a href="mailto:elvaldiviape@gmail.com" target="_blank">Gustavo Tello</a>
+    </p>
   </footer>
 
-  <!-- Archivos JavaScript -->
+  <!-- === BOTÓN OPCIONAL PARA IMPORTAR PRODUCTOS === -->
+  <button id="importBtn" class="hidden">📦 Importar productos</button>
+
+  <!-- === ARCHIVOS JS === -->
   <script type="module" src="firebase-config.js"></script>
   <script type="module" src="app.js"></script>
+  <!-- <script type="module" src="importar-productos.js"></script> -->
 </body>
 </html>
