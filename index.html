@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="assets/logo.png" type="image/png" />
 </head>
+
 <body>
   <!-- === HEADER === -->
   <header>
@@ -29,7 +30,7 @@
         <img src="assets/icons/carrito.png" alt="Carrito" />
       </button>
 
-      <button id="userBtn" title="Ver perfil">
+      <button id="userBtn" title="Iniciar sesión o ver perfil">
         <img src="assets/icons/user.png" alt="Usuario" />
       </button>
     </div>
@@ -52,12 +53,44 @@
     </div>
   </main>
 
+  <!-- === MODAL LOGIN / REGISTRO === -->
+  <div id="authModal" class="modal hidden">
+    <div class="modal-content auth-box">
+      <span id="closeAuthModal" class="close-btn">&times;</span>
+      <h3 id="authTitle">Iniciar Sesión</h3>
+
+      <!-- FORMULARIO DE LOGIN -->
+      <form id="loginForm" class="auth-form">
+        <input type="email" id="loginEmail" placeholder="Correo electrónico" required />
+        <input type="password" id="loginPassword" placeholder="Contraseña" required />
+        <button type="submit" class="auth-btn">Entrar</button>
+        <p class="toggle-text">
+          ¿No tienes cuenta?
+          <a href="#" id="showRegister">Regístrate aquí</a>
+        </p>
+      </form>
+
+      <!-- FORMULARIO DE REGISTRO -->
+      <form id="registerForm" class="auth-form hidden">
+        <input type="text" id="registerName" placeholder="Nombre completo" required />
+        <input type="email" id="registerEmail" placeholder="Correo electrónico" required />
+        <input type="password" id="registerPassword" placeholder="Contraseña" required />
+        <button type="submit" class="auth-btn">Crear cuenta</button>
+        <p class="toggle-text">
+          ¿Ya tienes cuenta?
+          <a href="#" id="showLogin">Inicia sesión</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
   <!-- === MODAL PERFIL DE USUARIO === -->
   <div id="userModal" class="modal hidden">
-    <div class="modal-content">
+    <div class="modal-content profile-box">
       <span id="closeUserModal" class="close-btn">&times;</span>
       <h3>Perfil de Usuario</h3>
       <div id="userData">
+        <img id="userAvatar" src="assets/icons/user.png" alt="Avatar" class="avatar" />
         <p><strong>Nombre:</strong> <span id="userName">Invitado</span></p>
         <p><strong>Email:</strong> <span id="userEmail">-</span></p>
       </div>
@@ -74,12 +107,35 @@
     </p>
   </footer>
 
-  <!-- === BOTÓN OPCIONAL PARA IMPORTAR PRODUCTOS === -->
-  <button id="importBtn" class="hidden">📦 Importar productos</button>
+  <!-- === FIREBASE CONFIGURACIÓN === -->
+  <script type="module">
+    // Importar módulos de Firebase (versión CDN estable)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-  <!-- === ARCHIVOS JS === -->
-  <script type="module" src="firebase-config.js"></script>
-  <script type="module" src="app.js"></script>
-  <!-- <script type="module" src="importar-productos.js"></script> -->
+    // Configuración de Firebase (tuya)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDNeN0AIcXw0aAiwc6S7472y7YMjHzbV94",
+      authDomain: "tienda-virtual-883ef.firebaseapp.com",
+      projectId: "tienda-virtual-883ef",
+      storageBucket: "tienda-virtual-883ef.firebasestorage.app",
+      messagingSenderId: "871120614985",
+      appId: "1:871120614985:web:0274d91497b7f1e3d33198"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Exponer globalmente para tu script principal
+    window.firebaseApp = app;
+    window.firebaseAuth = auth;
+    window.firebaseDB = db;
+  </script>
+
+  <!-- === SCRIPT PRINCIPAL === -->
+  <script type="module" src="main.js"></script>
 </body>
 </html>
